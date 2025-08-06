@@ -30,6 +30,25 @@ services:
     depends_on:
       - postgres-agent-state
 
+  interaction-api:
+    build: 
+      context: ./InteractionApi
+      dockerfile: Dockerfile
+    ports:
+      - "9092:8080"
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ConnectionStrings__DefaultConnection=Host=postgres-interaction;Port=5432;Database=interaction;Username=postgres;Password=postgres123
+      - Services__AuthService__BaseUrl=http://auth-service:8080
+      - Services__AgentStateApi__BaseUrl=http://agent-state-api:8080
+      - Jwt__SecretKey=YourSecretKeyHere123456789012345678901234567890
+      - Jwt__Issuer=AuthService
+      - Jwt__Audience=CallCenterAPI
+    depends_on:
+      - agent-state-api
+      - auth-service
+      - postgres-interaction
+
   postgres-auth:
     image: postgres:15
     environment:
@@ -52,6 +71,18 @@ services:
     volumes:
       - postgres_agent_state:/var/lib/postgresql/data
 
+  postgres-interaction:
+    image: postgres:15
+    environment:
+      POSTGRES_DB: interaction
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres123
+    ports:
+      - "5434:5432"
+    volumes:
+      - postgres_interaction_data:/var/lib/postgresql/data
+
 volumes:
   postgres_auth_data:
   postgres_agent_state:
+  postgres_interaction_data:
