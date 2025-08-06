@@ -151,12 +151,6 @@ public class AuthController : ControllerBase
             lastName = username?.Split(' ').Skip(1).FirstOrDefault() ?? ""
         });
     }
-
-    [HttpGet("health")]
-    public IActionResult Health()
-    {
-        return Ok(new { status = "healthy", timestamp = DateTime.UtcNow, service = "auth-service" });
-    }
 }
 
 public class TokenValidationRequest

@@ -9,4 +9,5 @@ public interface IAuthService
     Task<User?> GetUserByIdAsync(int id);
     Task<IEnumerable<User>> GetAllUsersAsync();
     Task<bool> DeleteUserAsync(int id);
+    Task<bool> IsServiceHealthyAsync();
 } 

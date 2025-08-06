@@ -44,9 +44,9 @@ public class JwtService : IJwtService
         );
 
         var tokenString = new JwtSecurityTokenHandler().WriteToken(token);
-        
+
         _logger.LogInformation("Generated JWT token for user: {Username}", user.Username);
-        
+
         return tokenString;
     }
 
@@ -79,4 +79,26 @@ public class JwtService : IJwtService
             return false;
         }
     }
+
+    public bool IsServiceHealthy()
+    {
+        try
+        {
+            // Simulate a health check by validating a dummy token
+            var dummyToken = GenerateToken(new User
+            {
+                Id = 1,
+                Username = "mockuser",
+                Email = "mock@email.com"
+            });
+            return ValidateToken(dummyToken);
+
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "JWT Service health check failed");
+            return false;
+        }
+    }
+    
 } 

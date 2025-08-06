@@ -118,4 +118,18 @@ public class AuthServiceImpl : IAuthService
             return false;
         }
     }
+
+    public async Task<bool> IsServiceHealthyAsync()
+    {
+        try
+        {
+            // Check if the AuthService is reachable
+            return await _context.Database.CanConnectAsync();
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "AuthService health check failed");
+            return false;
+        }
+    }
 } 
