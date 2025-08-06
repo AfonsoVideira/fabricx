@@ -179,13 +179,6 @@ public class AgentStateEventController : ControllerBase
         }
     }
 
-    [HttpGet("health")]
-    [AllowAnonymous]
-    public IActionResult Health()
-    {
-        return Ok(new { status = "healthy", timestamp = DateTime.UtcNow, service = "agent-state-api" });
-    }
-
     private string? GetJwtTokenFromHeader()
     {
         var authHeader = Request.Headers["Authorization"].FirstOrDefault();

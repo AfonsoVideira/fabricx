@@ -9,4 +9,5 @@ public interface IAgentStateService
     Task<Agent?> GetAgentByIdAsync(int agentId);
     Task<Agent?> GetAgentByUserIdAsync(int userId);
     Task<IEnumerable<Agent>> GetAllAgentsAsync();
+    Task<bool> IsServiceHealthyAsync();
 } 

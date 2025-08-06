@@ -29,7 +29,7 @@ public class AgentStateService : IAgentStateService
             }
 
             var agent = await _context.Agents.FirstOrDefaultAsync(a => a.Id == eventDto.AgentId);
-            
+
             if (agent == null)
             {
                 _logger.LogWarning("Agent with ID {AgentId} not found for event {EventType}",
@@ -43,6 +43,16 @@ public class AgentStateService : IAgentStateService
                 agent.Skills = JsonSerializer.Serialize(eventDto.Skills);
             }
 
+
+            if (eventDto.EventType == "SKILLS_UPDATE")
+            {
+                await _context.SaveChangesAsync();
+                _logger.LogInformation("Updated skills for agent {AgentId}: {Skills}",
+                    eventDto.AgentId, string.Join(", ", eventDto.Skills));
+                return;
+            }
+
+
             var newState = MapEventTypeToState(eventDto.EventType, eventDto.Timestamp);
             if (newState == null)
             {
@@ -53,17 +63,13 @@ public class AgentStateService : IAgentStateService
             agent.LastStateChange = eventDto.Timestamp;
 
             await _context.SaveChangesAsync();
-            
-            _logger.LogInformation("Processed event {EventType} for agent {AgentId}", 
+
+            _logger.LogInformation("Processed event {EventType} for agent {AgentId}",
                 eventDto.EventType, eventDto.AgentId);
-        }
-        catch (LateEventException)
-        {
-            throw; // Re-throw late event exceptions
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, "Error processing event {EventType} for agent {AgentId}", 
+            _logger.LogError(ex, "Error processing event {EventType} for agent {AgentId}",
                 eventDto.EventType, eventDto.AgentId);
             throw;
         }
@@ -76,7 +82,7 @@ public class AgentStateService : IAgentStateService
             // Check if agent with this UserId already exists
             var existingAgent = await _context.Agents
                 .FirstOrDefaultAsync(a => a.UserId == request.UserId);
-            
+
             if (existingAgent != null)
             {
                 throw new InvalidOperationException($"Agent already exists for UserId {request.UserId}");
@@ -99,7 +105,7 @@ public class AgentStateService : IAgentStateService
             _context.Agents.Add(agent);
             await _context.SaveChangesAsync();
 
-            _logger.LogInformation("Created agent {AgentName} with ID {AgentId} for UserId {UserId}", 
+            _logger.LogInformation("Created agent {AgentName} with ID {AgentId} for UserId {UserId}",
                 agent.Name, agent.Id, agent.UserId);
 
             return agent;
@@ -142,5 +148,19 @@ public class AgentStateService : IAgentStateService
             "CALL_ENDED" => "AVAILABLE",
             _ => null // Unknown event types don't change state
         };
+    }
+    
+    public async Task<bool> IsServiceHealthyAsync()
+    {
+        try
+        {
+            // Check if the database can be accessed
+            return await _context.Database.CanConnectAsync();
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "AgentStateService is not healthy");
+            return false;
+        }
     }
 } 
