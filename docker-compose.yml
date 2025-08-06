@@ -1,5 +1,4 @@
 services:
- 
   auth-service:
     build: 
       context: ./AuthService
@@ -15,6 +14,22 @@ services:
     depends_on:
       - postgres-auth
 
+  agent-state-api:
+    build: 
+      context: ./AgentStateApi
+      dockerfile: Dockerfile
+    ports:
+      - "9091:8080"
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ConnectionStrings__DefaultConnection=Host=postgres-agent-state;Port=5432;Database=agentstate;Username=postgres;Password=postgres123
+      - Services__AuthService__BaseUrl=http://auth-service:8080
+      - Jwt__SecretKey=YourSecretKeyHere123456789012345678901234567890
+      - Jwt__Issuer=AuthService
+      - Jwt__Audience=CallCenterAPI
+    depends_on:
+      - postgres-agent-state
+
   postgres-auth:
     image: postgres:15
     environment:
@@ -25,6 +40,18 @@ services:
       - "5432:5432"
     volumes:
       - postgres_auth_data:/var/lib/postgresql/data
+      
+  postgres-agent-state:
+    image: postgres:15
+    environment:
+      POSTGRES_DB: agentstate
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres123
+    ports:
+      - "5433:5432"
+    volumes:
+      - postgres_agent_state:/var/lib/postgresql/data
 
 volumes:
   postgres_auth_data:
+  postgres_agent_state:
