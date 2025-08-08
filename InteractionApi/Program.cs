@@ -60,7 +60,7 @@ builder.Services.AddDbContext<InteractionDbContext>(options =>
 
 // Add JWT Authentication
 var jwtSettings = builder.Configuration.GetSection("Jwt");
-var secretKey = jwtSettings["SecretKey"] ?? "YourSecretKeyHere123456789012345678901234567890";
+var secretKey = jwtSettings["SecretKey"] ?? "SuperDuperSecretKeyWink123456789";
 
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(options =>

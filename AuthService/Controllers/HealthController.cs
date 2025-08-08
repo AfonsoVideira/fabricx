@@ -26,7 +26,8 @@ public class HealthController : ControllerBase
             status = "live",
             timestamp = DateTime.UtcNow,
             service = "auth-service",
-            description = "Authentication and authorization service"
+            description = "Authentication and authorization service",
+            hostname= System.Net.Dns.GetHostName()
         });
     }
 

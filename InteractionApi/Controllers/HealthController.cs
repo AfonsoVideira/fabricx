@@ -31,7 +31,8 @@ public class HealthController : ControllerBase
             status = "live",
             timestamp = DateTime.UtcNow,
             service = "interaction-api",
-            description = "Skills management and agent activity coordination service"
+            description = "Skills management and agent activity coordination service",
+            hostname= System.Net.Dns.GetHostName(),
         });
     }
 

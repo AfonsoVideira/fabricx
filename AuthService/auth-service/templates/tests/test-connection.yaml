@@ -1,0 +1,21 @@
+{{- $fullName := include "auth-service.fullname" . -}}
+{{- $metaLabels := include "auth-service.labels" . -}}
+{{- range .Values.testServices }}
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: "{{ $fullName }}-test-connection-{{ .name }}"
+  labels:
+    {{- $metaLabels | nindent 4 }}
+  annotations:
+    "helm.sh/hook": test
+spec:
+  containers:
+    - name: {{ .name }}-test
+      image: curlimages/curl:latest
+      imagePullPolicy: IfNotPresent
+      command: ['curl']
+      args: ['{{ .host }}:{{ .port }}{{ .route }}']
+  restartPolicy: Never
+{{- end }}

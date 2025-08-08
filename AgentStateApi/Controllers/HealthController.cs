@@ -25,7 +25,8 @@ public class HealthController : ControllerBase
             status = "live",
             timestamp = DateTime.UtcNow,
             service = "agent-state-api",
-            description = "Agent state management service"
+            description = "Agent state management service",
+            hostname= System.Net.Dns.GetHostName(),
         });
     }
 

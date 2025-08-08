@@ -45,7 +45,7 @@ builder.Services.AddDbContext<AuthDbContext>(options =>
 
 // Configure JWT Authentication
 var jwtSettings = builder.Configuration.GetSection("Jwt");
-var secretKey = jwtSettings["SecretKey"] ?? "YourSecretKeyHere123456789012345678901234567890";
+var secretKey = jwtSettings["SecretKey"] ?? "SuperDuperSecretKeyWink123456789";
 var key = Encoding.ASCII.GetBytes(secretKey);
 
 builder.Services.AddAuthentication(options =>

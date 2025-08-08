@@ -1,0 +1,69 @@
+# Default values for fabricx.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+auth-service:
+  replicaCount: 
+  image:
+    repository: fabricx/auth
+    pullPolicy: IfNotPresent
+    # Overrides the image tag whose default is the chart appVersion.
+    tag: "1.0"
+  testServices:
+    - name: agent-state-api
+      host: fabricx-agent-state-api
+      port: 8080
+      route: /api/Health/live
+    - name: interaction-api
+      host: fabricx-interaction-api
+      port: 8080
+      route: /api/Health/live
+
+
+agent-state-api:
+  replicaCount: 1
+  image:
+    repository: fabricx/agent-state-api
+    pullPolicy: IfNotPresent
+    # Overrides the image tag whose default is the chart appVersion.
+    tag: "1.0"
+  environment:
+    enabled: true
+    variables:
+      - name: ASPNETCORE_ENVIRONMENT
+        value: "Development"
+      - name: ConnectionStrings__DefaultConnection
+        value: Host=host.docker.internal;Port=5433;Database=agentstate;Username=postgres;Password=postgres123
+      - name: Jwt__SecretKey
+        value: SuperDuperSecretKeyWink123456789
+      - name: Jwt__Issuer
+        value: AuthService
+      - name: Jwt__Audience
+        value: CallCenterAPI
+      - name: Services__AuthService__BaseUrl
+        value: http://fabricx-auth-service:8080
+
+interaction-api:
+  replicaCount: 1
+  image:
+    repository: fabricx/interaction-api
+    pullPolicy: IfNotPresent
+    # Overrides the image tag whose default is the chart appVersion.
+    tag: "1.0"
+  environment:
+    enabled: true
+    variables:
+      - name: ASPNETCORE_ENVIRONMENT
+        value: "Development"
+      - name: ConnectionStrings__DefaultConnection
+        value: Host=host.docker.internal;Port=5434;Database=interaction;Username=postgres;Password=postgres123
+      - name: Jwt__SecretKey
+        value: SuperDuperSecretKeyWink123456789
+      - name: Jwt__Issuer
+        value: AuthService
+      - name: Jwt__Audience
+        value: CallCenterAPI
+      - name: Services__AuthService__BaseUrl
+        value: http://fabricx-auth-service:8080
+      - name: Services__AgentStateApi__BaseUrl
+        value: http://fabricx-agent-state-api:8080

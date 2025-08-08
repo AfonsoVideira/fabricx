@@ -19,7 +19,7 @@ public class JwtService : IJwtService
 
     public string GenerateToken(User user)
     {
-        var secretKey = _configuration["Jwt:SecretKey"] ?? "YourSecretKeyHere123456789012345678901234567890";
+        var secretKey = _configuration["Jwt:SecretKey"] ?? "SuperDuperSecretKeyWink123456789";
         var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(secretKey));
         var credentials = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
 
@@ -54,7 +54,7 @@ public class JwtService : IJwtService
     {
         try
         {
-            var secretKey = _configuration["Jwt:SecretKey"] ?? "YourSecretKeyHere123456789012345678901234567890";
+            var secretKey = _configuration["Jwt:SecretKey"] ?? "SuperDuperSecretKeyWink123456789";
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(secretKey));
 
             var tokenHandler = new JwtSecurityTokenHandler();

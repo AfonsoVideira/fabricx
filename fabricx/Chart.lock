@@ -1,0 +1,12 @@
+dependencies:
+- name: auth-service
+  repository: file://../AuthService/auth-service
+  version: 0.1.0
+- name: agent-state-api
+  repository: file://../AgentStateAPI/agent-state-api
+  version: 0.1.0
+- name: interaction-api
+  repository: file://../InteractionAPI/interaction-api
+  version: 0.1.0
+digest: sha256:800a308a57cdf27382e6648e948abd2eb85e023a9d9ab4efc6bad0664fb002a7
+generated: "2025-08-08T12:48:10.665287+01:00"
