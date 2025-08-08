@@ -1,4 +1,4 @@
-# Five9 Assessment - Call Center Management System #
+# FabricX - Call Center Management System #
 A microservices-based call center management system built with .NET 8, featuring agent state management, authentication, and interaction orchestration.
 
 # Helm-Based Deployment Architecture #
